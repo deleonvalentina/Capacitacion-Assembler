@@ -1,0 +1,35 @@
+; Ejercicio 12 - Bucle tipo FOR que imprime un carácter
+; Crear un programa en lenguaje ensamblador que:
+; Imprima cinco veces el carácter 'A' en pantalla.
+; Utilice un bucle tipo FOR, controlado con el registro SI como contador.
+; Controle el bucle usando instrucciones de comparación (CMP) y salto condicional (JE o JMP).
+; Para imprimir cada carácter, utilice la interrupción INT 21h, función 2.
+
+.MODEL small
+.STACK 100h
+
+.DATA
+    letra DB 'A'        ; Carácter a imprimir
+
+.CODE
+main PROC
+
+    mov ax, @data       ; Inicializa el segmento de datos
+    mov ds, ax
+
+    mov si, 0           ; Inicializa el contador (SI = 0)
+
+bucle:  
+    mov dl, letra       ; Carga el carácter 'A' en DL
+    mov ah, 2           ; Función 2 de int 21h para imprimir carácter
+    int 21h             ; Llama a la interrupción para mostrar el carácter
+
+    inc si              ; Incrementa el contador
+    cmp si, 5           ; Compara el contador con 5
+    jl bucle            ; Si SI < 5, salta al inicio del bucle
+
+    mov ah, 4Ch         ; Finaliza el programa
+    int 21h
+
+main ENDP
+END main
