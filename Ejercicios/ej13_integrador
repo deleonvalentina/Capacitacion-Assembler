@@ -1,0 +1,46 @@
+; Ejercicio 13  - Calcular y mostrar el promedio de 4 números
+; Crear un programa en lenguaje ensamblador que:
+; - Tenga un arreglo de 4 números.
+; - Calcule la suma de esos números.
+; - Calcule el promedio (entero).
+; - Muestre en pantalla el resultado del promedio (en formato ASCII).
+; - Utilice un bucle tipo FOR (con LOOP) para recorrer el arreglo.
+; - Use la interrupción INT 21h función 2 para mostrar el carácter.
+
+.MODEL small
+.STACK 100h
+
+.DATA
+    arreglo DB 3, 3, 3, 2     ; Arreglo con 4 números
+
+.CODE
+main PROC
+
+    mov ax, @data
+    mov ds, ax
+
+    xor ax, ax           ; AL = 0 (para acumular la suma)
+    xor si, si           ; SI = 0 (índice del arreglo)
+    mov cx, 4            ; Contador del bucle (4 elementos)
+
+suma_loop:
+    mov bl, arreglo[si]  ; BL ← elemento del arreglo
+    add al, bl           ; AL ← AL + BL (acumulamos)
+    inc si               ; Avanzar índice
+    loop suma_loop       ; Repetir hasta que CX = 0
+
+    ; Calcular el promedio (suma en AL / 4)
+    mov bl, 4
+    div bl               ; AL ← AL / 4, resultado en AL
+
+    add al, '0'          ; Convertimos el número a ASCII
+    mov dl, al           ; DL ← carácter a imprimir
+    mov ah, 2            ; Función 2 de INT 21h (imprimir)
+    int 21h              ; Muestra el promedio
+
+    ; Finalizar programa
+    mov ah, 4Ch
+    int 21h
+
+main ENDP
+END main
